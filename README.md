@@ -1,2 +1,0 @@
-# sttm.github.io
-WebGLTest

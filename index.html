@@ -222,6 +222,117 @@
             border-bottom-color: #555;
         }
 
+        .app-preview {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+            padding: 30px;
+            background: #0f0f0f;
+            border: 1px solid #333;
+            border-radius: 4px;
+        }
+
+        .app-stack {
+            position: relative;
+            width: 300px;
+            height: 200px;
+        }
+
+        .app-stack img {
+            position: absolute;
+            width: 100%;
+            height: auto;
+            border: 2px solid #333;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, z-index 0.3s ease;
+        }
+
+        .app-stack img:nth-child(1) {
+            transform: translate(-10px, -10px) rotate(-2deg);
+            z-index: 1;
+        }
+
+        .app-stack img:nth-child(2) {
+            transform: translate(0, 0) rotate(1deg);
+            z-index: 2;
+        }
+
+        .app-stack img:nth-child(3) {
+            transform: translate(10px, 10px) rotate(-1deg);
+            z-index: 3;
+        }
+
+        .app-stack:hover img:nth-child(1) {
+            transform: translate(-15px, -15px) rotate(-3deg);
+        }
+
+        .app-stack:hover img:nth-child(2) {
+            transform: translate(0, -5px) rotate(2deg);
+        }
+
+        .app-stack:hover img:nth-child(3) {
+            transform: translate(15px, 15px) rotate(-2deg);
+        }
+
+        .app-description {
+            margin-left: 40px;
+            max-width: 400px;
+        }
+
+        .app-description h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .app-description p {
+            line-height: 1.6;
+            color: #bbb;
+        }
+
+        .component-section {
+            margin: 40px 0;
+            padding: 30px;
+            background: #0f0f0f;
+            border: 1px solid #333;
+            border-radius: 4px;
+        }
+
+        .component-section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .component-section img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #333;
+            border-radius: 4px;
+            margin-top: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .app-preview {
+                flex-direction: column;
+            }
+
+            .app-description {
+                margin-left: 0;
+                margin-top: 30px;
+            }
+
+            .app-stack {
+                width: 250px;
+                height: 167px;
+            }
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2em;
@@ -266,6 +377,24 @@
                 </ul>
             </div>
 
+            <div class="component-section">
+                <h3><i class="bi bi-pencil-square"></i> Looper Editor</h3>
+                <p>Мощный редактор для создания интерактивных проектов. Позволяет создавать сложные композиции с анимациями, аудио, видео и интерактивными элементами. Поддерживает импорт различных форматов и экспорт в LPAK.</p>
+                <img src="img/editor.png" alt="Looper Editor">
+            </div>
+
+            <div class="component-section">
+                <h3><i class="bi bi-play-circle"></i> Looper Player</h3>
+                <p>Проигрыватель для воспроизведения интерактивных проектов в формате LPAK. Обеспечивает полную интерактивность, управление аудио, поддержку винилового режима и высокое качество звука с аппаратным ускорением.</p>
+                <img src="img/player.png" alt="Looper Player">
+            </div>
+
+            <div class="component-section">
+                <h3><i class="bi bi-arrow-repeat"></i> SWF to LPAK Converter</h3>
+                <p>Конвертер для преобразования Flash SWF файлов в современный формат LPAK. Позволяет мигрировать старые Flash проекты в новый формат с сохранением всех элементов и интерактивности.</p>
+                <img src="img/converter.png" alt="SWF to LPAK Converter">
+            </div>
+
             <h2 class="section-title">Редактор и Плеер</h2>
             <p class="section-subtitle">Легкие версии: только редактор и плеер</p>
             
@@ -304,6 +433,18 @@
                     <h3>iOS</h3>
                     <div class="size">В разработке</div>
                     <div class="download-btn" style="opacity: 0.5;">Скоро</div>
+                </div>
+            </div>
+
+            <div class="app-preview">
+                <div class="app-stack">
+                    <img src="img/editor.png" alt="Looper Editor">
+                    <img src="img/player.png" alt="Looper Player">
+                    <img src="img/converter.png" alt="SWF to LPAK Converter">
+                </div>
+                <div class="app-description">
+                    <h3><i class="bi bi-box-seam"></i> Полный набор для работы с LPAK</h3>
+                    <p>Комплексное решение для создания и воспроизведения интерактивных пакетов. Включает редактор для создания проектов, плеер для их воспроизведения и конвертер для преобразования SWF файлов в формат LPAK. Позволяет создавать полноценные интерактивные приложения с поддержкой анимаций, аудио, видео и интерактивных элементов.</p>
                 </div>
             </div>
 

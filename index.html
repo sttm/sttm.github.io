@@ -710,36 +710,75 @@
             return null;
         }
 
-        // Счетчик скачиваний через GitHub API
+        // Счетчик скачиваний
+        // Используем комбинацию: GitHub Releases API + глобальный счетчик для файлов из репозитория
         async function fetchDownloadStats() {
             try {
                 const repo = 'sttm/looper_v1';
                 const releaseTag = 'v1.0.0';
+                let totalDownloads = 0;
                 
-                // Получаем информацию о релизе
-                const releaseResponse = await fetch(`https://api.github.com/repos/${repo}/releases/tags/${releaseTag}`);
-                if (!releaseResponse.ok) {
-                    throw new Error('Release not found');
+                // 1. Получаем статистику из GitHub Releases
+                try {
+                    const releaseResponse = await fetch(`https://api.github.com/repos/${repo}/releases/tags/${releaseTag}`);
+                    if (releaseResponse.ok) {
+                        const release = await releaseResponse.json();
+                        if (release.assets && release.assets.length > 0) {
+                            for (const asset of release.assets) {
+                                totalDownloads += asset.download_count || 0;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.log('GitHub Releases API error:', e);
                 }
                 
-                const release = await releaseResponse.json();
-                
-                // Суммируем количество скачиваний всех ассетов
-                let totalDownloads = 0;
-                if (release.assets && release.assets.length > 0) {
-                    for (const asset of release.assets) {
-                        totalDownloads += asset.download_count || 0;
+                // 2. Получаем статистику для файлов из репозитория (через глобальный счетчик)
+                // Файлы: windows_player-editor.zip, mac-intel_player-editor.zip, mac-silicon_player-editor.zip, looper_player.apk
+                try {
+                    const repoFilesResponse = await fetch('https://api.countapi.xyz/get/sttm.github.io/looper-downloads');
+                    if (repoFilesResponse.ok) {
+                        const repoData = await repoFilesResponse.json();
+                        if (repoData.value) {
+                            totalDownloads += repoData.value;
+                        }
                     }
+                } catch (e) {
+                    console.log('CountAPI error:', e);
                 }
                 
                 // Форматируем число с пробелами
-                document.getElementById('download-count').textContent = totalDownloads.toLocaleString('ru-RU');
+                if (totalDownloads > 0) {
+                    document.getElementById('download-count').textContent = totalDownloads.toLocaleString('ru-RU');
+                } else {
+                    document.getElementById('download-count').textContent = '—';
+                }
             } catch (error) {
                 console.error('Error fetching download stats:', error);
-                // Показываем "—" при ошибке
                 document.getElementById('download-count').textContent = '—';
             }
         }
+
+        // Отслеживание кликов по ссылкам скачивания
+        document.addEventListener('DOMContentLoaded', function() {
+            // Находим все ссылки на скачивание
+            const downloadLinks = document.querySelectorAll('a[download], a[href*=".zip"], a[href*=".apk"]');
+            
+            downloadLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    // Увеличиваем счетчик скачиваний через countapi.xyz
+                    fetch('https://api.countapi.xyz/hit/sttm.github.io/looper-downloads', {
+                        method: 'GET',
+                        cache: 'no-cache'
+                    }).then(() => {
+                        // Обновляем счетчик после небольшой задержки
+                        setTimeout(fetchDownloadStats, 1000);
+                    }).catch(err => {
+                        console.log('Failed to update download count:', err);
+                    });
+                });
+            });
+        });
 
         // Загружаем статистику скачиваний при загрузке страницы
         fetchDownloadStats();

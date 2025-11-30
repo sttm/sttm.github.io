@@ -99,6 +99,45 @@
             border-color: #667eea;
         }
 
+        .download-card.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .download-card.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .soon-badge {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-title {
+            text-align: center;
+            color: #667eea;
+            margin: 40px 0 20px 0;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
         .download-card .icon {
             font-size: 3em;
             margin-bottom: 15px;
@@ -185,9 +224,16 @@
                     <li>Беспрерывное воспроизведение с поддержкой точек зацикливания</li>
                     <li>Высокое качество звука с аппаратным ускорением</li>
                 </ul>
+                
+                <h3 style="margin-top: 20px; color: #667eea;">Доступные версии:</h3>
+                <ul>
+                    <li><strong>Редактор и Плеер</strong> - легкие версии для быстрого старта</li>
+                    <li><strong>Полные сборки</strong> - включают Плеер, Редактор и Конвертер SWF to LPAK</li>
+                </ul>
             </div>
 
-            <h2 style="text-align: center; color: #667eea; margin-bottom: 20px;">Скачать для вашей платформы</h2>
+            <h2 style="text-align: center; color: #667eea; margin-bottom: 20px;">Редактор и Плеер</h2>
+            <p class="section-subtitle">Легкие версии: только редактор и плеер</p>
             
             <div class="downloads">
                 <a href="windows_player-editor.zip" class="download-card" download>
@@ -214,6 +260,47 @@
                 <a href="looper_player.apk" class="download-card" download>
                     <div class="icon">📱</div>
                     <h3>Android</h3>
+                    <div class="size">~12 MB</div>
+                    <div class="download-btn">Скачать APK</div>
+                </a>
+
+                <div class="download-card disabled">
+                    <div class="icon">📱</div>
+                    <div class="soon-badge">Скоро</div>
+                    <h3>iOS</h3>
+                    <div class="size">В разработке</div>
+                    <div class="download-btn" style="opacity: 0.5;">Скоро</div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Полные сборки</h2>
+            <p class="section-subtitle">Полные версии включают: Плеер, Редактор и Конвертер SWF to LPAK</p>
+            
+            <div class="downloads">
+                <a href="https://github.com/sttm/looper_v1/releases/download/v1.0.0/windows.zip" class="download-card">
+                    <div class="icon">🪟</div>
+                    <h3>Windows (Полная)</h3>
+                    <div class="size">~166 MB</div>
+                    <div class="download-btn">Скачать</div>
+                </a>
+
+                <a href="https://github.com/sttm/looper_v1/releases/download/v1.0.0/mac-intel.zip" class="download-card">
+                    <div class="icon">💻</div>
+                    <h3>macOS Intel (Полная)</h3>
+                    <div class="size">~244 MB</div>
+                    <div class="download-btn">Скачать</div>
+                </a>
+
+                <a href="https://github.com/sttm/looper_v1/releases/download/v1.0.0/mac-silicon.zip" class="download-card">
+                    <div class="icon">🍎</div>
+                    <h3>macOS Apple Silicon (Полная)</h3>
+                    <div class="size">~142 MB</div>
+                    <div class="download-btn">Скачать</div>
+                </a>
+
+                <a href="https://github.com/sttm/looper_v1/releases/download/v1.0.0/looper_player.apk" class="download-card">
+                    <div class="icon">📱</div>
+                    <h3>Android (Полная)</h3>
                     <div class="size">~12 MB</div>
                     <div class="download-btn">Скачать APK</div>
                 </a>

@@ -765,31 +765,43 @@
         }
 
         // Отслеживание кликов по ссылкам скачивания
-        document.addEventListener('DOMContentLoaded', function() {
+        function setupDownloadTracking() {
             // Находим все ссылки на скачивание
-            const downloadLinks = document.querySelectorAll('a[download], a[href*=".zip"], a[href*=".apk"]');
+            const downloadLinks = document.querySelectorAll('a[download], a[href*=".zip"], a[href*=".apk"], a[href*="releases/download"]');
             
             downloadLinks.forEach(link => {
-                link.addEventListener('click', function() {
+                link.addEventListener('click', function(e) {
+                    console.log('Download link clicked:', this.href);
+                    
                     // Увеличиваем счетчик скачиваний через countapi.xyz
                     fetch('https://api.countapi.xyz/hit/sttm.github.io/looper-downloads', {
                         method: 'GET',
                         cache: 'no-cache'
-                    }).then(() => {
-                        // Обновляем счетчик после небольшой задержки
-                        setTimeout(fetchDownloadStats, 1000);
+                    }).then(response => {
+                        if (response.ok) {
+                            console.log('Download count updated');
+                            // Обновляем счетчик после небольшой задержки
+                            setTimeout(fetchDownloadStats, 1500);
+                        }
                     }).catch(err => {
                         console.log('Failed to update download count:', err);
                     });
-                });
+                }, true); // Используем capture phase для перехвата до навигации
             });
-        });
+        }
+
+        // Инициализируем отслеживание после загрузки DOM
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setupDownloadTracking);
+        } else {
+            setupDownloadTracking();
+        }
 
         // Загружаем статистику скачиваний при загрузке страницы
         fetchDownloadStats();
         
-        // Обновляем каждые 5 минут
-        setInterval(fetchDownloadStats, 5 * 60 * 1000);
+        // Обновляем каждые 2 минуты
+        setInterval(fetchDownloadStats, 2 * 60 * 1000);
     </script>
 </body>
 </html>

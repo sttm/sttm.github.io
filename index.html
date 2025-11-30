@@ -662,19 +662,47 @@
     </div>
 
     <script>
-        // Счетчик просмотров (используем localStorage для демонстрации)
-        // В реальном проекте можно использовать внешний API или серверную логику
+        // Счетчик просмотров
+        // Используем комбинацию: localStorage для базового подсчета + попытка отправки на простой счетчик
         (function() {
-            let viewCount = localStorage.getItem('looper_page_views');
-            if (!viewCount) {
-                viewCount = 0;
+            // Локальный счетчик (для демонстрации)
+            let localViewCount = localStorage.getItem('looper_page_views');
+            if (!localViewCount) {
+                localViewCount = 0;
             }
-            viewCount = parseInt(viewCount) + 1;
-            localStorage.setItem('looper_page_views', viewCount);
+            localViewCount = parseInt(localViewCount) + 1;
+            localStorage.setItem('looper_page_views', localViewCount);
             
-            // Форматируем число с пробелами
-            document.getElementById('view-count').textContent = viewCount.toLocaleString('ru-RU');
+            // Пытаемся получить глобальный счетчик через GitHub API (используя issues как простой счетчик)
+            // Или можно использовать внешний сервис
+            fetchViewCount().then(count => {
+                if (count !== null) {
+                    document.getElementById('view-count').textContent = count.toLocaleString('ru-RU');
+                } else {
+                    // Fallback на локальный счетчик
+                    document.getElementById('view-count').textContent = localViewCount.toLocaleString('ru-RU');
+                }
+            }).catch(() => {
+                document.getElementById('view-count').textContent = localViewCount.toLocaleString('ru-RU');
+            });
         })();
+
+        // Функция для получения счетчика просмотров
+        // Можно использовать внешний API или GitHub Gist как простой счетчик
+        async function fetchViewCount() {
+            try {
+                // Вариант 1: Использовать GitHub Gist как простой счетчик
+                // Или можно использовать бесплатный сервис типа countapi.xyz
+                const response = await fetch('https://api.countapi.xyz/hit/sttm.github.io/looper-views');
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.value || null;
+                }
+            } catch (error) {
+                console.log('View counter service unavailable, using local count');
+            }
+            return null;
+        }
 
         // Счетчик скачиваний через GitHub API
         async function fetchDownloadStats() {

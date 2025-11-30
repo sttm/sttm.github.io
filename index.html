@@ -647,9 +647,72 @@
 
         <div class="footer">
             <p>Проект Looper | <a href="https://github.com/sttm">GitHub</a></p>
-            <p style="margin-top: 10px; font-size: 0.85em;">© 2025 Statum Project</p>
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #222; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+                <div style="text-align: center;">
+                    <div style="color: #667eea; font-size: 1.2em; font-weight: 600;" id="view-count">—</div>
+                    <div style="color: #888; font-size: 0.85em; margin-top: 5px;">Просмотров</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="color: #667eea; font-size: 1.2em; font-weight: 600;" id="download-count">—</div>
+                    <div style="color: #888; font-size: 0.85em; margin-top: 5px;">Скачиваний</div>
+                </div>
+            </div>
+            <p style="margin-top: 15px; font-size: 0.85em;">© 2025 Statum Project</p>
         </div>
     </div>
+
+    <script>
+        // Счетчик просмотров (используем localStorage для демонстрации)
+        // В реальном проекте можно использовать внешний API или серверную логику
+        (function() {
+            let viewCount = localStorage.getItem('looper_page_views');
+            if (!viewCount) {
+                viewCount = 0;
+            }
+            viewCount = parseInt(viewCount) + 1;
+            localStorage.setItem('looper_page_views', viewCount);
+            
+            // Форматируем число с пробелами
+            document.getElementById('view-count').textContent = viewCount.toLocaleString('ru-RU');
+        })();
+
+        // Счетчик скачиваний через GitHub API
+        async function fetchDownloadStats() {
+            try {
+                const repo = 'sttm/looper_v1';
+                const releaseTag = 'v1.0.0';
+                
+                // Получаем информацию о релизе
+                const releaseResponse = await fetch(`https://api.github.com/repos/${repo}/releases/tags/${releaseTag}`);
+                if (!releaseResponse.ok) {
+                    throw new Error('Release not found');
+                }
+                
+                const release = await releaseResponse.json();
+                
+                // Суммируем количество скачиваний всех ассетов
+                let totalDownloads = 0;
+                if (release.assets && release.assets.length > 0) {
+                    for (const asset of release.assets) {
+                        totalDownloads += asset.download_count || 0;
+                    }
+                }
+                
+                // Форматируем число с пробелами
+                document.getElementById('download-count').textContent = totalDownloads.toLocaleString('ru-RU');
+            } catch (error) {
+                console.error('Error fetching download stats:', error);
+                // Показываем "—" при ошибке
+                document.getElementById('download-count').textContent = '—';
+            }
+        }
+
+        // Загружаем статистику скачиваний при загрузке страницы
+        fetchDownloadStats();
+        
+        // Обновляем каждые 5 минут
+        setInterval(fetchDownloadStats, 5 * 60 * 1000);
+    </script>
 </body>
 </html>
 

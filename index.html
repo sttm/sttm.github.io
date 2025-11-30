@@ -672,44 +672,40 @@
     </div>
 
     <script>
-        // Счетчик просмотров
-        // Используем комбинацию: localStorage для базового подсчета + попытка отправки на простой счетчик
+        // Счетчик просмотров (глобальный, не локальный)
+        // Используем бесплатный API countapi.xyz для глобального подсчета
         (function() {
-            // Локальный счетчик (для демонстрации)
-            let localViewCount = localStorage.getItem('looper_page_views');
-            if (!localViewCount) {
-                localViewCount = 0;
-            }
-            localViewCount = parseInt(localViewCount) + 1;
-            localStorage.setItem('looper_page_views', localViewCount);
-            
-            // Пытаемся получить глобальный счетчик через GitHub API (используя issues как простой счетчик)
-            // Или можно использовать внешний сервис
             fetchViewCount().then(count => {
                 if (count !== null) {
                     document.getElementById('view-count').textContent = count.toLocaleString('ru-RU');
                 } else {
-                    // Fallback на локальный счетчик
-                    document.getElementById('view-count').textContent = localViewCount.toLocaleString('ru-RU');
+                    // Если API недоступен, показываем "—"
+                    document.getElementById('view-count').textContent = '—';
                 }
             }).catch(() => {
-                document.getElementById('view-count').textContent = localViewCount.toLocaleString('ru-RU');
+                document.getElementById('view-count').textContent = '—';
             });
         })();
 
-        // Функция для получения счетчика просмотров
-        // Можно использовать внешний API или GitHub Gist как простой счетчик
+        // Функция для получения глобального счетчика просмотров
+        // Использует countapi.xyz - бесплатный сервис для подсчета просмотров
+        // Каждый раз при загрузке страницы счетчик увеличивается и возвращает новое значение
         async function fetchViewCount() {
             try {
-                // Вариант 1: Использовать GitHub Gist как простой счетчик
-                // Или можно использовать бесплатный сервис типа countapi.xyz
-                const response = await fetch('https://api.countapi.xyz/hit/sttm.github.io/looper-views');
+                // Используем countapi.xyz - это глобальный счетчик, не локальный
+                // 'hit' увеличивает счетчик и возвращает новое значение
+                const response = await fetch('https://api.countapi.xyz/hit/sttm.github.io/looper-views', {
+                    method: 'GET',
+                    cache: 'no-cache'
+                });
+                
                 if (response.ok) {
                     const data = await response.json();
+                    // data.value содержит текущее количество просмотров
                     return data.value || null;
                 }
             } catch (error) {
-                console.log('View counter service unavailable, using local count');
+                console.log('View counter service unavailable');
             }
             return null;
         }

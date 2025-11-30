@@ -672,14 +672,12 @@
     </div>
 
     <script>
-        // Счетчик просмотров (глобальный, не локальный)
-        // Используем бесплатный API countapi.xyz для глобального подсчета
+        // Счетчик просмотров через hits.sh API
         (function() {
             fetchViewCount().then(count => {
                 if (count !== null) {
                     document.getElementById('view-count').textContent = count.toLocaleString('ru-RU');
                 } else {
-                    // Если API недоступен, показываем "—"
                     document.getElementById('view-count').textContent = '—';
                 }
             }).catch(() => {
@@ -687,22 +685,26 @@
             });
         })();
 
-        // Функция для получения глобального счетчика просмотров
-        // Использует countapi.xyz - бесплатный сервис для подсчета просмотров
-        // Каждый раз при загрузке страницы счетчик увеличивается и возвращает новое значение
+        // Функция для получения счетчика просмотров через hits.sh API
         async function fetchViewCount() {
             try {
-                // Используем countapi.xyz - это глобальный счетчик, не локальный
-                // 'hit' увеличивает счетчик и возвращает новое значение
-                const response = await fetch('https://api.countapi.xyz/hit/sttm.github.io/looper-views', {
+                // hits.sh предоставляет API для получения количества просмотров
+                const response = await fetch('https://hits.sh/sttm.github.io/', {
                     method: 'GET',
                     cache: 'no-cache'
                 });
                 
                 if (response.ok) {
-                    const data = await response.json();
-                    // data.value содержит текущее количество просмотров
-                    return data.value || null;
+                    const text = await response.text();
+                    // hits.sh возвращает JSON с полем "views"
+                    try {
+                        const data = JSON.parse(text);
+                        return data.views || null;
+                    } catch (e) {
+                        // Если не JSON, пытаемся извлечь число из текста
+                        const match = text.match(/\d+/);
+                        return match ? parseInt(match[0]) : null;
+                    }
                 }
             } catch (error) {
                 console.log('View counter service unavailable');
